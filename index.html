@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akiva Prell • Full Project Slate | Pixie Labs Enterprise Partnership</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .font-display { font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif; font-weight: 600; letter-spacing: -0.02em; }
+    .project-card { transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); background: #0a0a0f; border: 1px solid #27272a; }
+    .project-card:hover { border-color: #3f3f46; transform: translateY(-2px); }
+    .nav-scrolled { background-color: rgba(5, 5, 5, 0.96); backdrop-filter: blur(20px); }
+    .tier-header { font-size: 13px; letter-spacing: 2px; font-weight: 600; }
+    .poster { height: 190px; object-fit: cover; border-radius: 12px; width: 100%; background: #111; }
+    .poster-lg { height: 260px; object-fit: cover; border-radius: 16px; width: 100%; background: #111; }
+    .poster-9x16 { aspect-ratio: 9 / 16; object-fit: contain; border-radius: 12px; width: 100%; background: #111; }
+    @keyframes glow-flash { 0%, 100% { opacity: 1; text-shadow: 0 0 0 rgba(232,122,229,0); } 50% { opacity: 0.75; text-shadow: 0 0 14px rgba(232,122,229,0.55); } }
+    .glow-flash { animation: glow-flash 2.4s ease-in-out infinite; }
+    @keyframes glow-throb-red { 0%, 100% { color: #fca5a5; box-shadow: 0 0 0 rgba(239,68,68,0); } 50% { color: #f87171; box-shadow: 0 0 14px rgba(239,68,68,0.55); } }
+    .confidential-glow { animation: glow-throb-red 1.6s ease-in-out infinite; background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.35); }
+    .poster-placeholder { height: 190px; border-radius: 12px; width: 100%; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px; }
+    .poster-placeholder-lg { height: 260px; border-radius: 16px; width: 100%; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px; }
+    .needs-art { font-size:10px; letter-spacing:1.5px; font-weight:700; color:#fbbf24; background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.25); padding:3px 8px; border-radius:999px; }
+    /* HERO VIDEO */
+    .hero-wrap { position: relative; overflow: hidden; }
+    .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: contrast(1.08) saturate(0.96) brightness(1.05); }
+    .hero-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,5,5,0.223) 0%, rgba(5,5,5,0.07) 35%, rgba(5,5,5,0.448) 82%, rgba(5,5,5,0.7) 100%); }
+    .hero-noise::after{ content:""; position:absolute; inset:0; background-image: radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px); background-size: 3px 3px; pointer-events:none; }
+    /* Flags */
+    .flag-chip { display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.03); padding: 6px 12px 6px 8px; border-radius: 999px; }
+    .flag-svg { width: 26px; height: 18px; border-radius: 3px; overflow:hidden; display:block; box-shadow: 0 0 0 1px rgba(255,255,255,0.15) inset; }
+    /* Bands */
+    .singh-band { background: radial-gradient(1100px 500px at 15% -10%, rgba(99,102,241,0.16), transparent 60%), radial-gradient(900px 500px at 100% 0%, rgba(249,115,22,0.10), transparent 55%), #0a0a0f; border: 1px solid rgba(255,255,255,0.08); }
+    .reimagine-band { background: radial-gradient(1100px 500px at 90% -10%, rgba(236,72,153,0.14), transparent 60%), radial-gradient(900px 500px at 0% 10%, rgba(168,85,247,0.12), transparent 55%), #0a0a0f; border: 1px solid rgba(255,255,255,0.08); }
+    .spinoff-band { background: radial-gradient(900px 420px at 85% -10%, rgba(217,70,239,0.16), transparent 60%), radial-gradient(800px 420px at 5% 100%, rgba(99,102,241,0.10), transparent 55%), #0a0a0f; border: 1px solid rgba(255,255,255,0.08); }
+    .revive-band { position:relative; background: #050505; border: 1px solid rgba(255,255,255,0.08); border-top: 4px solid var(--px-orange); overflow:hidden; }
+    .revive-band::before { content:""; position:absolute; top:-120px; right:-120px; width:340px; height:340px; background: radial-gradient(circle, rgba(249,96,31,0.14), transparent 70%); pointer-events:none; }
+    .pilot-band { background: radial-gradient(1100px 500px at 90% -10%, rgba(245,158,11,0.14), transparent 60%), radial-gradient(900px 500px at 0% 20%, rgba(239,68,68,0.10), transparent 55%), #0a0a0f; border: 1px solid rgba(255,255,255,0.08); }
+    .stars-band { background: radial-gradient(1100px 500px at 85% -10%, rgba(251,191,36,0.14), transparent 60%), radial-gradient(900px 500px at 5% 30%, rgba(168,85,247,0.10), transparent 55%), #0a0a0f; border: 1px solid rgba(255,255,255,0.08); }
+    .arbitrage-band { background: radial-gradient(1000px 480px at 10% -10%, rgba(99,102,241,0.15), transparent 60%), radial-gradient(900px 480px at 100% 30%, rgba(21,134,184,0.10), transparent 55%), #0a0a0f; border: 1px solid rgba(255,255,255,0.08); }
+    .political-band { background: #0a0a0f; border: 1px dashed rgba(255,255,255,0.18); }
+    .expand-toggle { margin-top:12px; display:inline-flex; align-items:center; gap:6px; background:none; border:none; color: var(--higgs-green); font-size:13px; font-weight:600; cursor:pointer; padding:0; }
+    .expand-toggle i { font-size:10px; transition: transform 0.2s ease; }
+    .expand-toggle.open i { transform: rotate(180deg); }
+    .expand-panel { display:none; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08); font-size:13.5px; line-height:1.6; color:rgba(255,255,255,0.7); }
+    .expand-panel.open { display:block; }
+    .dev-badge { font-size:10.5px; font-weight:600; padding:3px 9px; border-radius:6px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.55); }
+    .network-badge { font-size:11px; font-weight:800; padding:4px 10px; border-radius:4px; letter-spacing:0.5px; }
+    .network-spike { background:#000; color:#fff; font-style:italic; font-family: Georgia, serif; }
+    .network-cc { background:#111; color:#fff; text-transform:lowercase; font-weight:900; border:1px solid rgba(255,255,255,0.25); }
+    .stat-num { font-family:'Space Grotesk', sans-serif; font-weight:700; letter-spacing:-0.02em; }
+    .bar-track { background: rgba(255,255,255,0.06); border-radius: 999px; overflow:hidden; height:8px; }
+    .bar-fill { height:100%; border-radius:999px; background: linear-gradient(90deg,#6366f1,#a855f7); }
+    .roster-chip { font-size:13px; padding:6px 13px; border-radius:999px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.03); color:rgba(255,255,255,0.75); }
+    .title-chip { font-size:12px; padding:6px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.10); background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.55); }
+    .section-eyebrow { font-size: 12px; letter-spacing: 2.5px; font-weight: 600; }
+    ::selection { background: #6366f1; color:#fff; }
+    :root {
+        --higgs-green: #e87ae5;
+        --px-teal: #3ec0bb;
+        --px-orange: #f9601f;
+        --px-blue: #1586b8;
+        --px-lavender: #aa7edb;
+    }
+    .higgs-green { color: var(--higgs-green) !important; }
+    .bg-higgs-green { background-color: var(--higgs-green) !important; }
+    .px-teal { color: var(--px-teal) !important; }
+    .px-orange { color: var(--px-orange) !important; }
+    .px-blue { color: var(--px-blue) !important; }
+    .px-lavender { color: var(--px-lavender) !important; }
+    .bg-px-orange { background-color: var(--px-orange) !important; }
+    .bg-px-teal { background-color: var(--px-teal) !important; }
+    .laurel-card { text-align:center; padding: 12px 20px; }
+    .laurel-svg { width: 150px; height: 42px; margin: 0 auto; display:block; }
+    /* Inline play-to-video component */
+    .inline-video-wrap { position:relative; width:100%; }
+    .inline-video-poster { position:relative; cursor:pointer; }
+    .inline-video-poster img { display:block; }
+    .inline-play-btn { position:absolute; inset:0; margin:auto; width:64px; height:64px; border-radius:999px; background:rgba(5,5,5,0.55); border:1.5px solid rgba(255,255,255,0.6); display:flex; align-items:center; justify-content:center; color:#fff; font-size:20px; transition: all 0.2s ease; }
+    .inline-video-poster:hover .inline-play-btn { background: var(--higgs-green); border-color: var(--higgs-green); color:#050505; transform: scale(1.06); }
+    /* Fixed 16:9 frame so the poster image and the trailer (also 16:9) always
+       fill the same box with no cropping, letterboxing, or stretching, and it
+       scales fluidly on mobile since it's based on aspect-ratio, not a fixed px height. */
+    .media-16x9 { position:relative; width:100%; aspect-ratio: 16 / 9; border-radius:16px; overflow:hidden; background:#111; }
+    .media-16x9 img, .media-16x9 video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+    .media-16x9 iframe.yt-embed { position:absolute; inset:0; width:100%; height:100%; border:0; }
+    .media-16x9 video { object-fit:contain; background:#000; }
+    /* Gentle wiggle for the SINGh Jr stars-in-stars badge */
+    @keyframes gentle-wiggle {
+        0%, 100% { transform: rotate(-2.5deg); }
+        50% { transform: rotate(2.5deg); }
+    }
+    .wiggle-anim { animation: gentle-wiggle 3.2s ease-in-out infinite; transform-origin: center; }
+    @keyframes glow-throb-green { 0%, 100% { opacity: 1; text-shadow: 0 0 0 rgba(249,96,31,0); } 50% { opacity: 0.8; text-shadow: 0 0 22px rgba(249,96,31,0.85); } }
+    .glow-intense-green { animation: glow-throb-green 1.6s ease-in-out infinite; }
+</style>
+</head>
+<body class="bg-[#050505] text-zinc-200">
+
+    <!-- NAV -->
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-[#050505]/0 transition-colors duration-300" id="mainnav">
+        <div class="max-w-6xl mx-auto px-8 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <div class="w-8 h-8 rounded-lg bg-higgs-green flex items-center justify-center">
+                    <span class="text-white font-bold text-[21px] tracking-[-1.5px]">AP</span>
+                </div>
+                <div class="font-semibold tracking-tight text-[21px]">Akiva Prell</div>
+                <span class="font-bold text-lg" style="color:#3ec0bb;">+</span>
+                <div class="font-semibold tracking-tight text-[21px] higgs-green">Pixie Labs</div>
+            </div>
+            <div class="flex items-center gap-x-6 text-sm font-medium overflow-x-auto no-scrollbar">
+                <a href="#thesis" class="hidden lg:inline hover:text-white text-white/70 transition-colors whitespace-nowrap">Thesis</a>
+                <a href="#singh" class="hidden lg:inline hover:text-white text-white/70 transition-colors whitespace-nowrap">SINGh</a>
+                <a href="#pillar1" class="hidden lg:inline hover:text-white text-white/70 transition-colors whitespace-nowrap">Production</a>
+                <a href="#pillar2" class="hidden lg:inline hover:text-white text-white/70 transition-colors whitespace-nowrap">Growth Engine</a>
+                <a href="#next" class="px-6 py-2 rounded-xl bg-higgs-green text-white font-semibold text-sm hover:opacity-90 transition-all whitespace-nowrap">Next Steps</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO — silent looping video, text sits low to leave the video open -->
+    <div class="hero-wrap hero-noise h-[92vh] min-h-[620px] flex items-end">
+        <video id="heroVideo" class="hero-video" autoplay muted loop playsinline preload="auto">
+            <source src="assets/video/pixielabs_hero_loop.mp4" type="video/mp4">
+        </video>
+        <div class="hero-scrim"></div>
+        <div class="relative z-10 max-w-6xl mx-auto px-8 pb-10 w-full">
+            <div class="max-w-[660px]">
+                <div class="inline-block text-xs font-semibold tracking-[2px] px-teal mb-2">CONFIDENTIAL — FOR PIXIE LABS FOUNDER/INVESTORS (POST-NDA)</div>
+                <h1 class="text-6xl md:text-7xl tracking-[-3px] font-bold leading-[0.98] font-display">Joint Case Study</h1>
+                <p class="mt-3 text-lg text-white/80 leading-relaxed max-w-2xl"><span class="higgs-green font-medium">Pixie Labs</span> as the AI production backbone: superior technology <span style="color:#3ec0bb" class="font-bold">+</span> deep Hollywood relationships to revive dormant IP and celebrity projects at scale. Secure early deals and traction to attract growth capital and establish <span class="higgs-green font-medium">Pixie Labs</span> as the go-to AI production partner.</p>
+                <div class="mt-6 flex flex-wrap items-center gap-3">
+                    <a href="#singh" class="inline-flex items-center gap-x-2 px-6 py-3 rounded-2xl bg-white text-[#050505] font-semibold text-sm hover:bg-zinc-100 transition-all">
+                        <i class="fa-solid fa-play text-xs"></i> Start with SINGh
+                    </a>
+                    <a href="#slate" class="inline-flex items-center gap-x-2 px-6 py-3 rounded-2xl border border-white/25 text-white font-semibold text-sm hover:bg-white/10 transition-all">
+                        See the Full Slate
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= THESIS ================= -->
+    <div id="thesis" class="max-w-6xl mx-auto px-8 pt-10 pb-2">
+        <div class="text-center max-w-3xl mx-auto">
+            <div class="inline-block text-xs font-semibold tracking-[2px] px-teal mb-3">THE OPPORTUNITY</div>
+            <h2 class="text-4xl md:text-6xl font-bold tracking-tight font-display leading-[1.05]">The AI production backbone of the next generation of filmmaking.</h2>
+        </div>
+
+        <div class="mt-10 bg-[#0a0a0f] border border-white/10 rounded-3xl p-6 md:p-8">
+            <div class="flex items-start gap-3">
+                <img src="assets/images/alex_becker.jpg" alt="Alex Becker" class="w-9 h-9 rounded-full object-cover shrink-0">
+                <div>
+                    <div class="font-display font-semibold text-white leading-tight">Alex Becker</div>
+                    <div class="text-[11px] text-white/40">Posted on X</div>
+                </div>
+            </div>
+            <blockquote class="mt-4 text-xl md:text-2xl text-white/90 font-display leading-snug">"The biggest money-making opportunity in AI isn't in tech. It's in entertainment. Imagine the billions..."</blockquote>
+        </div>
+
+        <div class="mt-10 text-center">
+            <h2 class="text-5xl md:text-6xl font-black tracking-tight font-display leading-[1.0] higgs-green uppercase">Hollywood 2.0</h2>
+            <div class="mt-5 space-y-2 max-w-2xl mx-auto">
+                <p class="text-lg md:text-xl text-white font-display font-bold uppercase">Billion-Dollar Window Open — Now</p>
+                <p class="mt-4 text-white/70 text-[15px] leading-relaxed">Hollywood knows what's coming.</p>
+                <p class="text-white/70 text-[15px] leading-relaxed">In 2 years, the majority of production will be AI.</p>
+                <p class="text-white/70 text-[15px] leading-relaxed">Make big bold moves — now — and you can <span class="text-white font-semibold">own this space</span>.</p>
+                <p class="mt-4 text-white/90 text-base font-display">Here is our plan to help get you there.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= LAUREL QUOTES ================= -->
+    <div class="max-w-6xl mx-auto px-8 pt-8 pb-2">
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="laurel-card">
+                <svg class="laurel-svg" viewBox="0 0 220 60" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="none" stroke="var(--higgs-green)" stroke-width="1.6" opacity="0.85">
+                        <path d="M100 55 C 70 50, 45 40, 34 18 C 42 22, 50 24, 58 22 C 48 18, 40 12, 36 4 C 45 8, 53 9, 60 6 C 52 4, 46 -1, 44 -8"/>
+                        <path d="M100 55 C 60 48, 30 34, 18 10"/>
+                        <path d="M120 55 C 150 50, 175 40, 186 18 C 178 22, 170 24, 162 22 C 172 18, 180 12, 184 4 C 175 8, 167 9, 160 6 C 168 4, 174 -1, 176 -8"/>
+                        <path d="M120 55 C 160 48, 190 34, 202 10"/>
+                    </g>
+                </svg>
+                <p class="mt-4 text-[15px] text-white/85 italic leading-relaxed">"Which part of this is AI? How did you do that? The best I've seen."</p>
+                <div class="mt-4 text-xs tracking-wide px-lavender font-medium">— Academy Award-Winning Producer of Terminator &amp; Mortal Kombat</div>
+            </div>
+            <div class="laurel-card">
+                <svg class="laurel-svg" viewBox="0 0 220 60" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="none" stroke="var(--higgs-green)" stroke-width="1.6" opacity="0.85">
+                        <path d="M100 55 C 70 50, 45 40, 34 18 C 42 22, 50 24, 58 22 C 48 18, 40 12, 36 4 C 45 8, 53 9, 60 6 C 52 4, 46 -1, 44 -8"/>
+                        <path d="M100 55 C 60 48, 30 34, 18 10"/>
+                        <path d="M120 55 C 150 50, 175 40, 186 18 C 178 22, 170 24, 162 22 C 172 18, 180 12, 184 4 C 175 8, 167 9, 160 6 C 168 4, 174 -1, 176 -8"/>
+                        <path d="M120 55 C 160 48, 190 34, 202 10"/>
+                    </g>
+                </svg>
+                <p class="mt-4 text-[15px] text-white/85 italic leading-relaxed">"The best AI I've seen, and a great f#@%ing story."</p>
+                <div class="mt-4 text-xs tracking-wide px-lavender font-medium">— CEO of Fremantle</div>
+            </div>
+            <div class="laurel-card">
+                <svg class="laurel-svg" viewBox="0 0 220 60" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="none" stroke="var(--higgs-green)" stroke-width="1.6" opacity="0.85">
+                        <path d="M100 55 C 70 50, 45 40, 34 18 C 42 22, 50 24, 58 22 C 48 18, 40 12, 36 4 C 45 8, 53 9, 60 6 C 52 4, 46 -1, 44 -8"/>
+                        <path d="M100 55 C 60 48, 30 34, 18 10"/>
+                        <path d="M120 55 C 150 50, 175 40, 186 18 C 178 22, 170 24, 162 22 C 172 18, 180 12, 184 4 C 175 8, 167 9, 160 6 C 168 4, 174 -1, 176 -8"/>
+                        <path d="M120 55 C 160 48, 190 34, 202 10"/>
+                    </g>
+                </svg>
+                <p class="mt-4 text-[15px] text-white/85 italic leading-relaxed">"This is soooo impressive! It's so great. Just a clear home run."</p>
+                <div class="mt-4 text-xs tracking-wide px-lavender font-medium">— Original Productions (OP)</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="singh" class="max-w-6xl mx-auto px-8 pt-2 pb-2">
+        <div class="singh-band rounded-[32px] p-6 md:p-10">
+
+            <div id="singhVideoBlock" class="inline-video-wrap mb-8">
+                <div class="inline-video-poster media-16x9" onclick="playInlineVideo('singhVideoBlock')">
+                    <img src="assets/images/singh_key_art.jpg" alt="SINGh key art">
+                    <div class="inline-play-btn"><i class="fa-solid fa-play" style="margin-left:3px"></i></div>
+                </div>
+                <div class="media-16x9" style="display:none;">
+                    <video controls playsinline>
+                                <source src="assets/video/singh_trailer.mp4" type="video/mp4">
+                            </video>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 mb-6">
+                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-higgs-green text-[#050505] tracking-wider">EXHIBIT A &mdash; PROOF OF EXECUTION</span>
+                <div class="flag-chip">
+                    <span class="flag-svg"><svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect width="60" height="13.3" y="0" fill="#FF9933"/><rect width="60" height="13.3" y="13.3" fill="#FFFFFF"/><rect width="60" height="13.4" y="26.6" fill="#138808"/><circle cx="30" cy="20" r="4.2" fill="none" stroke="#000080" stroke-width="0.6"/><circle cx="30" cy="20" r="0.7" fill="#000080"/></svg></span>
+                    <span class="flag-svg"><svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect width="60" height="40" fill="#B22234"/><g fill="#FFFFFF"><rect y="3.08" width="60" height="3.08"/><rect y="9.23" width="60" height="3.08"/><rect y="15.38" width="60" height="3.08"/><rect y="21.54" width="60" height="3.08"/><rect y="27.69" width="60" height="3.08"/><rect y="33.85" width="60" height="3.08"/></g><rect width="26" height="21.5" fill="#3C3B6E"/></svg></span>
+                </div>
+                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-fuchsia-950 text-fuchsia-300 tracking-wider">ROM-COM + MICRO-DRAMA MARKET OPENER</span>
+            </div>
+
+            <h2 class="text-4xl md:text-5xl font-bold tracking-tight font-display leading-[1.03]">SING<em class="italic">h</em></h2>
+            <p class="mt-2 text-sm higgs-green font-semibold tracking-wide">EXHIBIT A: this is what &ldquo;produced, not promised&rdquo; looks like.</p>
+            <p class="mt-3 text-white/50 text-sm">Feature Film | Romantic Comedy, with Crossover Soundtrack &nbsp;•&nbsp; <a href="https://singhthemovie.com/" target="_blank" class="text-[#a5b4fc] hover:underline">singhthemovie.com</a></p>
+            <p class="mt-4 max-w-3xl text-lg text-white/85 leading-snug">World's first AI Rom-Com Musical Feature Film <span style="color:#3ec0bb" class="font-bold">+</span> with a multi-country soundtrack <span style="color:#3ec0bb" class="font-bold">+</span> tour strategy <span style="color:#3ec0bb" class="font-bold">+</span> created by a <span class="text-white font-medium">#1 Charting Music Producer</span> <span style="color:#3ec0bb" class="font-bold">+</span> <span class="text-white font-medium">Film Marketer</span>.</p>
+
+            <div class="mt-12">
+                <div class="tier-header higgs-green mb-4">A PROVEN, UNDER-SERVED, HIGHLY-CONCENTRATED AUDIENCE</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-[#050505] border border-white/10 rounded-2xl p-5"><div class="stat-num text-3xl px-teal">5.2M</div><div class="text-xs text-white/50 mt-1">Indian diaspora, U.S.</div></div>
+                    <div class="bg-[#050505] border border-white/10 rounded-2xl p-5"><div class="stat-num text-3xl px-teal">1.9M</div><div class="text-xs text-white/50 mt-1">Indian diaspora, Canada</div></div>
+                    <div class="bg-[#050505] border border-white/10 rounded-2xl p-5"><div class="stat-num text-3xl px-teal">1.8M</div><div class="text-xs text-white/50 mt-1">Indian diaspora, UK</div></div>
+                    <div class="bg-[#050505] border border-white/10 rounded-2xl p-5"><div class="stat-num text-3xl px-teal">1.4B</div><div class="text-xs text-white/50 mt-1">Home market, India</div></div>
+                </div>
+                <p class="mt-4 text-white/60 text-sm max-w-3xl">Concentrated in just <span class="text-white font-medium">15 global metro areas</span> — plus a natural MENA crossover audience for the music and the cross-cultural romance arc — making targeted marketing efficient rather than a mass-market gamble.</p>
+            </div>
+
+            <div class="mt-12 grid md:grid-cols-2 gap-6 items-stretch">
+                <div class="bg-[#050505] border border-white/10 rounded-3xl p-7 md:p-8">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-pink-500/15 flex items-center justify-center shrink-0"><i class="fa-solid fa-heart text-pink-400"></i></div>
+                        <div>
+                            <div class="font-semibold text-xl tracking-tight text-pink-400">SINGh sits exactly where the micro-drama market's core buyers are</div>
+                            <p class="mt-3 text-[15px] text-white/70 leading-relaxed">Female viewers drive the fastest-growing segment in mobile short-form video — accounting for roughly <span class="text-white font-semibold">70% of micro-drama users outside China</span>, with romance-forward, family-and-love-triangle storylines as the dominant hook. SINGh is a romance built from the ground up for exactly that viewer. <span class="higgs-green font-semibold">A Pixie Labs case study</span> built around SINGh is proof the tools can produce premium, cinematic content for the single highest-intent audience in short-form video today.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-[#050505] border border-white/10 rounded-3xl p-7 md:p-8 flex flex-col">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-[#6366f1]/15 flex items-center justify-center shrink-0"><i class="fa-solid fa-music text-[#a5b4fc]"></i></div>
+                        <div>
+                            <div class="tier-header text-[#a5b4fc] mb-2">THE MUSIC ENGINE</div>
+                            <p class="text-white/75 text-[15px] leading-relaxed">Music is central to the story <em>and</em> the business model. The soundtrack features original tracks by top Indian/American artists with cumulative streaming reach of <span class="text-white font-semibold">500M–2B+</span>.</p>
+                        </div>
+                    </div>
+                    <div id="imNextBlock" class="inline-video-wrap mt-5">
+                        <div class="inline-video-poster media-16x9" onclick="playInlineVideo('imNextBlock')">
+                            <img src="assets/images/im_next_poster.jpg" alt="I'm Next music video">
+                            <div class="inline-play-btn"><i class="fa-solid fa-play" style="margin-left:3px"></i></div>
+                        </div>
+                        <div class="media-16x9" style="display:none;">
+                            <video controls playsinline>
+                                <source src="assets/video/im_next_music_video.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-white/40">SINGh - Music video scene — "I'm Next"</div>
+                </div>
+            </div>
+
+            <!-- SINGh JR sub-card -->
+            <div class="mt-6">
+                <div class="spinoff-band rounded-[28px] p-6 md:p-8">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
+                        <div class="tier-header text-[#a5b4fc]">THE BUILT-IN SPINOFF</div>
+                        <div class="text-sm font-bold tracking-wide text-fuchsia-400">REVIVE HIT MUSIC &amp; STARS!</div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 items-start" style="align-items:flex-start;">
+                        <div class="rounded-2xl overflow-hidden bg-[#111]" style="aspect-ratio:16/9;">
+                            <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+                                <source src="assets/video/singh_jr_clip.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div>
+                            <div class="flex flex-nowrap items-end gap-3 mb-3">
+                                <img src="assets/images/missy_elliott_badge.png" alt="Missy Elliott star badge" class="wiggle-anim w-16 md:w-20 shrink-0" style="animation-duration:3.4s; animation-delay:0s;">
+                                <img src="assets/images/jamie_foxx_badge.png" alt="Jamie Foxx star badge" class="wiggle-anim w-16 md:w-20 shrink-0" style="animation-duration:3.0s; animation-delay:0.3s;">
+                                <img src="assets/images/mary_j_blige_badge.png" alt="Mary J Blige star badge" class="wiggle-anim w-16 md:w-20 shrink-0" style="animation-duration:3.6s; animation-delay:0.6s;">
+                                <img src="assets/images/lil_romeo_badge.png" alt="Lil\' Romeo star badge" class="wiggle-anim w-16 md:w-20 shrink-0" style="animation-duration:3.2s; animation-delay:0.9s;">
+                            </div>
+                            <h3 class="text-2xl font-semibold font-display tracking-tight">SINGh Jr. — The Origin-Story Series</h3>
+                            <div class="text-sm text-white/50 mt-1 mb-3">A Retro Hip-Hop / R&amp;B Prequel</div>
+                            <p class="text-[15px] text-white/75 leading-relaxed">Same SINGh characters (as kids — they never get old), with new drama, laughs and adventures, set to a retro Hip-Hop/R&amp;B <span style="color:#3ec0bb" class="font-bold">+</span> SOUNDTRACK!</p>
+                            <p class="mt-3 text-[15px] text-white/75 leading-relaxed">Revive <span style="color:#3ec0bb" class="font-bold">+</span> Remix real artists like <span class="text-fuchsia-400 font-bold">Missy Elliott</span>, <span class="text-fuchsia-400 font-bold">Mary J Blige</span>, <span class="text-fuchsia-400 font-bold">Jamie Foxx</span>, <span class="text-fuchsia-400 font-bold">Lil' Romeo</span> and others — (Music &amp; Video) — IN THEIR PRIME — as only AI can!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= PILLAR 1: PROFESSIONAL PRODUCTION SERVICES ================= -->
+    <div id="pillar1" class="max-w-6xl mx-auto px-8 pt-10 pb-2">
+        <div class="text-center max-w-2xl mx-auto">
+            <div class="inline-block text-xs font-semibold tracking-[2px] px-teal mb-3">PILLAR 1</div>
+            <h2 class="text-4xl md:text-5xl font-bold tracking-tight font-display leading-[1.05]">AI Production Studio</h2>
+        </div>
+    </div>
+
+    <!-- ================= REVIVE IP WITH AI ================= -->
+    <div id="revive" class="max-w-6xl mx-auto px-8 pt-2 pb-4">
+        <div class="revive-band rounded-[32px] p-6 md:p-10">
+
+            <div class="flex flex-wrap items-start justify-between gap-3 mb-2">
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight font-display leading-[1.03]">Revive IP With AI</h2>
+                <div class="px-3 py-1 rounded-full bg-px-teal text-white text-xs font-bold tracking-wide shrink-0">$BILLION-DOLLAR PLAY</div>
+            </div>
+            <p class="mt-2 text-lg font-display font-semibold">The Billion-Dollar Play That WORKS. <span class="higgs-green glow-intense-green">We are already doing this NOW.</span></p>
+
+            <div class="mt-8 text-xs font-semibold tracking-wider text-white/40">TWO QUICK PROOFS THIS ALREADY WORKS</div>
+            <div class="mt-3 grid md:grid-cols-2 gap-4">
+
+                <!-- Cobra Kai comparator (compact) -->
+                <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
+                    <div class="flex gap-3 items-start">
+                        <div class="rounded-lg overflow-hidden bg-black shrink-0" style="width:88px; height:88px;">
+                            <div class="tenor-gif-embed" data-postid="3148522708241677533" data-share-method="host" data-aspect-ratio="1" data-width="100%"><a href="https://tenor.com/view/johnny-lawrence-pound-chest-william-zabka-cobra-kai-gif-3148522708241677533">Johnny Lawrence Pound Chest GIF</a></div>
+                            <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+                        </div>
+                        <div class="min-w-0">
+                            <div class="font-display font-semibold text-white leading-tight">Cobra Kai</div>
+                            <p class="mt-1 text-[13px] text-white/60 leading-snug">Old IP + older stars, back in their prime. 6 seasons, 9 Emmy noms, ~$500M+ franchise.</p>
+                        </div>
+                    </div>
+                    <button class="expand-toggle" onclick="toggleExpand('exp-cobra')"><span>Read more</span><i class="fa-solid fa-chevron-down"></i></button>
+                    <div id="exp-cobra" class="expand-panel">
+                        <p>A 35-year-dormant Karate Kid IP, brought back with its original stars in their prime — one of the biggest streaming revivals of the decade. Everyone already knows this playbook works.</p>
+                        <div class="mt-3 grid grid-cols-3 gap-2 text-center">
+                            <div class="bg-[#0a0a0f] border border-white/10 rounded-lg p-2"><div class="stat-num text-base text-white">6</div><div class="text-[9px] text-white/40">Seasons</div></div>
+                            <div class="bg-[#0a0a0f] border border-white/10 rounded-lg p-2 col-span-3 md:col-span-1"><div class="stat-num text-sm higgs-green leading-snug">2.2 billion streaming minutes in a single U.S. week</div></div>
+                            <div class="bg-[#0a0a0f] border border-white/10 rounded-lg p-2"><div class="stat-num text-base higgs-green">$500M+</div><div class="text-[9px] text-white/40">Est. value</div></div>
+                        </div>
+                        <p class="mt-3">With AI, we don't need the original stars to still be available, or even look like themselves - we can revive any show, any star, in their prime, on demand.</p>
+                    </div>
+                </div>
+
+                <!-- Space Ghost comparator (compact) -->
+                <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
+                    <div class="flex gap-3 items-start">
+                        <div class="rounded-lg overflow-hidden bg-black shrink-0" style="width:88px; height:88px;">
+                            <div class="tenor-gif-embed" data-postid="5447613" data-share-method="host" data-aspect-ratio="1.32979" data-width="100%"><a href="https://tenor.com/view/ghost-dancing-cartoon-space-gif-5447613">Ghost Dancing GIF</a></div>
+                            <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+                        </div>
+                        <div class="min-w-0">
+                            <div class="font-display font-semibold text-white leading-tight">Space Ghost</div>
+                            <p class="mt-1 text-[13px] text-white/60 leading-snug">$35K/ep revival that built Adult Swim into a multi-billion-dollar empire.</p>
+                        </div>
+                    </div>
+                    <button class="expand-toggle" onclick="toggleExpand('exp-ghost')"><span>Read more</span><i class="fa-solid fa-chevron-down"></i></button>
+                    <div id="exp-ghost" class="expand-panel">
+                        <p>In 1994, a zero-value IP cartoon superhero from the 60's was resurrected into a talk show for $35,000 per episode. It ran for 10 years, generated billions of dollars, and built the <span class="higgs-green font-bold">multi-billion-dollar content empire Adult Swim</span>.</p>
+                        <p class="mt-2">With AI, we can do this for any dormant IP, and any star from the past — reviving them in their prime, at a fraction of even that already-tiny cost.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <h3 class="mt-10 text-4xl md:text-5xl font-bold tracking-tight font-display leading-[1.03]">Revive <span class="higgs-green">ANY SHOW</span> — any IP — with AI</h3>
+
+            <div class="mt-6 bg-white/[0.03] border border-white/10 rounded-2xl p-6 md:p-8">
+                <div class="grid md:grid-cols-5 gap-6 items-start">
+
+                    <!-- Video is the hero -->
+                    <div class="md:col-span-3">
+                        <div id="daxWablyBlock" class="inline-video-wrap">
+                            <div class="inline-video-poster media-16x9" onclick="playInlineVideo('daxWablyBlock')">
+                                <img src="assets/images/1000_ways_poster.jpg" alt="1,000 Ways to Die revival — Dying for Likes">
+                                <div class="inline-play-btn" style="background:rgba(5,5,5,0.5); border-color: var(--higgs-green); width:76px; height:76px;"><i class="fa-solid fa-play higgs-green" style="margin-left:3px; font-size:22px;"></i></div>
+                            </div>
+                            <div class="media-16x9" style="display:none;">
+                            <video controls playsinline>
+                                <source src="assets/video/1000_ways_revival.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+                        <div class="mt-2 text-xs text-white/40 italic">Watch the first episode of the AI revival.</div>
+
+                        <!-- Pixie Labs-style stat bars -->
+                        <div class="mt-4 space-y-2">
+                            <div class="bg-px-teal rounded-lg px-4 py-2.5 flex items-center justify-center">
+                                <span class="text-white font-display font-extrabold text-sm md:text-base tracking-wide text-center">REDUCE COST <span class="font-black">+</span> RISK BY 90%</span>
+                            </div>
+                            <div class="bg-px-teal rounded-lg px-4 py-2.5 flex items-center justify-center">
+                                <span class="text-white font-display font-extrabold text-sm md:text-base tracking-wide text-center">INCREASE SPEED BY 90%</span>
+                            </div>
+                            <div class="bg-px-teal rounded-lg px-4 py-2.5 flex items-center justify-center">
+                                <span class="text-white font-display font-extrabold text-sm md:text-base tracking-wide text-center">TEST MARKET WITH REAL DATA</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Supporting info -->
+                    <div class="md:col-span-2">
+                        <div class="flex items-center gap-2 mb-3">
+                            <img src="assets/images/1000_ways_logo.jpg" alt="1,000 Ways to Die logo" class="rounded-lg" style="width:64px; height:48px; object-fit:cover;">
+                            <div>
+                                <div class="font-display font-semibold text-white leading-tight">1,000 Ways to Die</div>
+                                <div class="text-[11px] text-white/40">Original Productions (Fremantle)</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-1.5 mb-3">
+                            <span class="network-badge network-spike">SPIKE</span>
+                            <span class="network-badge network-cc">comedy central</span>
+                            <span class="dev-badge">6 SEASONS</span>
+                        </div>
+                        <p class="text-[13.5px] text-white/70 leading-relaxed"><span class="higgs-green font-semibold">We revived this exact IP with AI.</span> Here's what OP said when they saw what we could do (that their own people could not):</p>
+                        <blockquote class="mt-2 text-base text-white/90 italic font-display leading-snug border-l-2 border-higgs-green pl-3">"This is soooo impressive! It's so great. Just a clear home run."</blockquote>
+                        <div class="mt-1 text-xs tracking-wide px-lavender font-medium">— Original Productions (OP)</div>
+
+                        <button class="expand-toggle" onclick="toggleExpand('exp-revive-pitch')"><span>Read more</span><i class="fa-solid fa-chevron-down"></i></button>
+                        <div id="exp-revive-pitch" class="expand-panel">
+                            <p>Every major media and production company owns a back catalog of dormant IP. They are professional producers — <span class="px-teal font-bold">with budgets</span>. But they lack the ability to do what we do with AI.</p>
+                            <p class="mt-2">We resurrect valuable (but dormant) IP and turn it into valuable new content with AI — better, faster <span style="color:#3ec0bb" class="font-bold">+</span> cheaper.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-white/10 text-center">
+                    <div class="text-2xl md:text-3xl font-display font-bold text-white">REVIVE ANY SHOW <span class="higgs-green">+</span> ANY STAR <span class="higgs-green">+</span> IN THEIR PRIME!</div>
+                    <img src="assets/images/revived_shows_stars_collage.png" alt="Revived shows and stars collage" class="mt-5 w-full max-w-3xl mx-auto">
+                </div>
+            </div>
+            <!-- Revive Hollywood Dreams -->
+            <div class="mt-10">
+                <div class="text-2xl md:text-3xl font-bold tracking-tight font-display leading-[1.1]">Revive Hollywood Dreams</div>
+                <p class="mt-3 text-[15px] text-white/75 leading-relaxed max-w-3xl">Hollywood stars have "DREAM PROJECTS" that no one in Hollywood would green-light for $10–$20 million.</p>
+                <p class="mt-2 text-[15px] text-white/75 leading-relaxed max-w-3xl">We can make them for <span class="px-teal font-semibold">$50–$500k</span> — with AI.</p>
+                <p class="mt-2 text-[15px] text-white/75 leading-relaxed max-w-3xl">Many of these stars can float or raise the <span class="px-teal font-bold">$</span> themselves — to make their DREAM PROJECTS come alive.</p>
+                <img src="assets/images/revive_hollywood_dreams.png" alt="Revive Hollywood Dreams — Ye, Dolly, Criss Angel and other dormant stars" class="mt-5 w-full">
+                <p class="mt-4 text-[15px] text-white/75 leading-relaxed max-w-3xl">Dozens of productions, with famous, motivated Hollywood Stars — paying for production, and promoting our work making their <span class="higgs-green font-bold">DREAM PROJECTS</span> come alive (generating millions in EARNED MEDIA and attracting our next wave(s) of Hollywood Stars with <span class="higgs-green font-bold">DREAM PROJECTS</span>).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= PILOT EVERYTHING / PRODUCTION SLATE ================= -->
+    <div id="pilot" class="max-w-6xl mx-auto px-8 pt-2 pb-2">
+        <div class="pilot-band rounded-[32px] p-6 md:p-10">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+
+            <div class="flex items-center flex-wrap gap-3">
+                <svg class="w-8 h-9 pilot-greenlight" viewBox="0 0 32 36" xmlns="http://www.w3.org/2000/svg" aria-label="Green light"><rect x="4" y="2" width="24" height="32" rx="6" fill="#111"/><circle cx="16" cy="18" r="9" fill="var(--higgs-green)" class="pilot-greenlight-bulb"/></svg>
+                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-950 text-amber-400 tracking-wider">PILOT EVERYTHING</span>
+                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-px-teal text-white tracking-wider ml-2">NEW MULTI-MILLION $ REVENUE STREAM</span>
+            </div>
+            <h2 class="mt-4 text-4xl md:text-5xl font-bold tracking-tight font-display leading-[1.03]">Pilots for $50K, Not $2–5 Million</h2>
+            <p class="mt-4 text-white/70 text-[15px] max-w-3xl leading-relaxed">The average cost of a network TV pilot is <span class="text-white font-semibold">$2–$5 million</span>. We can do them for <span class="px-teal font-semibold">$50K</span>.</p>
+            <p class="mt-3 text-white/70 text-[15px] max-w-3xl leading-relaxed">There is a Gold-Rush of content — RIGHT NOW — thanks to AI. Hollywood lacks the AI talent to move quickly enough. Hollywood wants this — few can do it — we can do it at scale.</p>
+            <p class="mt-3 text-lg font-display leading-snug max-w-3xl higgs-green font-semibold">Fuck specs, fuck moodboards. We can produce your pilot — exactly as it would look if it had a $50 million budget — for <span class="px-teal">$50K</span> — FAST.</p>
+                </div>
+            <div class="rounded-2xl bg-white/[0.03] border border-white/10 p-6">
+                <div class="text-xs text-white/50 tracking-wider mb-4">COST PER PILOT</div>
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm text-white/70 mb-1"><span>Network Pilot</span><span class="font-semibold" style="color:#ef4444;">$2–5M</span></div>
+                    <div class="rounded-full bg-white/10" style="height:10px; width:100%;"><div class="rounded-full" style="height:10px; width:100%; background:#b91c1c;"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm text-white/70 mb-1"><span>With AI</span><span class="font-semibold px-teal">$50K</span></div>
+                    <div class="rounded-full bg-white/10" style="height:10px; width:100%;"><div class="rounded-full bg-px-orange" style="height:10px; width:2%;"></div></div>
+                </div>
+                <div class="mt-4 text-xs text-white/50">That's up to 100 pilots for the price of one network pilot.</div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= PILLAR 2: THE VIRAL GROWTH ENGINE ================= -->
+    <div id="pillar2" class="max-w-6xl mx-auto px-8 pt-10 pb-2">
+        <div class="text-center max-w-2xl mx-auto">
+            <div class="inline-block text-xs font-semibold tracking-[2px] px-teal mb-3">PILLAR 2</div>
+            <h2 class="text-4xl md:text-5xl font-bold tracking-tight font-display leading-[1.05]">Viral Growth Engine</h2>
+            <p class="mt-4 text-white/70 text-[15px] leading-relaxed">Not just content: attention-grabbing assets that generate millions of views, grow your brand awareness, and drive more production traffic and users.</p>
+        </div>
+    </div>
+
+    <!-- ================= SLATE ================= -->
+    <div id="slate" class="max-w-6xl mx-auto px-8 pt-0 pb-2">
+        <div class="pilot-band rounded-[32px] p-6 md:p-10">
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight font-display leading-[1.03]">SLATE</h2>
+                <div class="mt-2 higgs-green text-lg font-display font-semibold tracking-wide mb-6">PRODUCED / IN PRODUCTION / READY</div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.25rem;">
+
+                    <div class="project-card rounded-3xl p-6 md:p-8 md:col-span-2 lg:col-span-3">
+                        <div class="grid lg:grid-cols-5 gap-8 items-start">
+                            <div class="lg:col-span-2">
+                                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-violet-950 text-violet-400 tracking-wider">VIRAL 2D ANIMATED SERIES</span>
+                                <img src="assets/images/new_norm_logo.png" alt="The New Norm logo" class="mt-3 w-full max-w-[280px]">
+                                <p class="mt-2 text-sm text-white/70 leading-snug">Already delivered <span class="font-semibold text-white">110 million organic views</span>, zero ad spend, zero influencers.</p>
+                                <div id="newNormBlock2" class="inline-video-wrap mb-4">
+                                    <div class="inline-video-poster media-16x9" onclick="playInlineVideo('newNormBlock2')">
+                                        <img src="assets/images/new_norm_key_art.jpg" alt="The New Norm key art">
+                                        <div class="inline-play-btn"><i class="fa-solid fa-play" style="margin-left:3px"></i></div>
+                                    </div>
+                                    <div class="media-16x9" style="display:none;">
+                            <video controls playsinline>
+                                <source src="assets/video/new_norm_pilot.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                                </div>
+                                <button class="expand-toggle" onclick="playAltVideo('newNormBlock2','assets/video/new_norm_election_episode.mp4')"><span>Watch the Election Episode instead</span><i class="fa-solid fa-play" style="font-size:9px"></i></button>
+                            </div>
+
+                            <div class="lg:col-span-3 bg-[#050505] border border-white/10 rounded-3xl p-6 md:p-7">
+                                <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                                    <div class="font-display font-semibold text-lg text-white">X (Twitter) Performance, Head to Head</div>
+                                    
+                                </div>
+                                <div class="text-xs text-white/40 mb-6">Zero ad spend, zero influencer budget on either account.</div>
+
+                                <!-- Column headers -->
+                                <div class="grid grid-cols-3 gap-2 pb-2 border-b border-white/10 text-[11px] font-semibold tracking-wide text-white/40">
+                                    <div>METRIC</div>
+                                    <div class="text-center flex flex-col items-center gap-1"><img src="assets/images/higgsfield_logo.jpg" alt="Higgsfield logo" style="height:22px; width:auto;" class="mx-auto"><span style="color:rgba(255,255,255,0.4)">@higgsfield_ai</span></div>
+                                    <div class="text-center higgs-green flex flex-col items-center gap-1"><img src="assets/images/new_norm_logo_small.png" alt="The New Norm logo" style="height:20px; width:auto;" class="mx-auto"><span>@XNewNorm</span></div>
+                                </div>
+
+                                <!-- Headline rows with multiplier -->
+                                <div class="grid grid-cols-3 gap-2 items-center py-3 border-b border-white/5">
+                                    <div class="text-[13px] text-white/70">Avg. views / post</div>
+                                    <div class="text-center text-white/50 text-sm">14,200</div>
+                                    <div class="text-center"><span class="stat-num text-xl higgs-green">1.45M+</span></div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 items-center py-1 pb-3 border-b border-white/5">
+                                    <div></div><div></div>
+                                    <div class="text-center"><span class="dev-badge" style="border-color:rgba(168,69,204,0.3); color:var(--higgs-green);">~102x MORE</span></div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 items-center py-3 border-b border-white/5">
+                                    <div class="text-[13px] text-white/70">Highest single post</div>
+                                    <div class="text-center text-white/50 text-sm">137,501</div>
+                                    <div class="text-center"><span class="stat-num text-xl higgs-green">45.5M</span></div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 items-center py-1 pb-3 border-b border-white/10">
+                                    <div></div><div></div>
+                                    <div class="text-center"><span class="dev-badge" style="border-color:rgba(168,69,204,0.3); color:var(--higgs-green);">~331x MORE</span></div>
+                                </div>
+
+                                <!-- Threshold rows -->
+                                <div class="mt-4 grid grid-cols-3 gap-2 items-center py-2 text-sm">
+                                    <div class="text-[13px] text-white/60">Posts over 100K views</div>
+                                    <div class="text-center text-white/50">3</div>
+                                    <div class="text-center font-semibold higgs-green">13</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 items-center py-2 text-sm bg-white/[0.02]">
+                                    <div class="text-[13px] text-white/60">Posts over 500K views</div>
+                                    <div class="text-center text-white/50">0</div>
+                                    <div class="text-center font-semibold higgs-green">6</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 items-center py-2 text-sm">
+                                    <div class="text-[13px] text-white/60">Posts over 1M views</div>
+                                    <div class="text-center text-white/50">0</div>
+                                    <div class="text-center font-semibold higgs-green">4</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 items-center py-2 text-sm bg-white/[0.02]">
+                                    <div class="text-[13px] text-white/60">Posts over 5M views</div>
+                                    <div class="text-center text-white/50">0</div>
+                                    <div class="text-center font-semibold higgs-green">2</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 items-center py-2 text-sm">
+                                    <div class="text-[13px] text-white/60">Posts over 10M views</div>
+                                    <div class="text-center text-white/50">0</div>
+                                    <div class="text-center font-semibold higgs-green">1</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 items-center py-2 text-sm bg-white/[0.02]">
+                                    <div class="text-[13px] text-white/60">Posts over 40M views</div>
+                                    <div class="text-center text-white/50">0</div>
+                                    <div class="text-center font-semibold higgs-green">1</div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card rounded-3xl p-6">
+                        <div class="rounded-2xl overflow-hidden bg-[#111] mb-4" style="aspect-ratio:9/16;">
+                            <video class="w-full h-full object-contain" autoplay muted loop playsinline>
+                                <source src="assets/video/ai_slop_today_loop.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mb-2"><span class="dev-badge">100% DEVELOPED</span><span class="dev-badge">$0 DEVELOPMENT COST</span></div>
+                        <h4 class="text-xl font-semibold font-display">AI (Slop) Today</h4>
+                        <p class="mt-1 text-sm text-white/60 italic">America's Funniest AI Videos.</p>
+                        <p class="mt-2 text-sm text-white/70 leading-snug">Free, user-generated content with more views than the Super Bowl and all of network primetime — combined.</p>
+                        <button class="expand-toggle" onclick="toggleExpand('exp-slop')"><span>Read more</span><i class="fa-solid fa-chevron-down"></i></button>
+                        <div id="exp-slop" class="expand-panel">
+                            <p>A competition show where the internet's funniest, most viral AI clips compete for cash prizes. Hosted by "AI Bro" and a different national celebrity host in every country and language — we sell the format, not just the show. The world's first user-generated competition series where the content creates itself, the audience promotes itself, and the format sells itself in every country with social media and a sense of humor.</p>
+                            <p class="font-semibold text-white">THE HOOK: "We're Not Making Content&mdash;We're Monetizing The Internet's Multi-Billion-View (FREE) Content"</p>
+                            <p class="mt-2">Every day, millions of people encounter AI slop: talking cats, romantic strawberries, satirical news memes, beautiful girls at soccer games. They laugh. They share. They can&rsquo;t look away.</p>
+                            <p class="mt-2">We're bringing these billions of organic, user-generated video views &ndash; into our curated brand.</p>
+                            <p class="mt-3 higgs-green font-semibold">WHY THIS SHOW PRINTS MONEY (In Every Country)</p>
+                            <p class="mt-2 font-semibold text-white">1. Zero Production Costs for Content</p>
+                            <p class="mt-1">Users generate everything. We curate the best weekly submissions. Content library grows exponentially (archive = syndication gold). Rights cleared on submission (users sign over in exchange for prize eligibility).</p>
+                            <p class="mt-2 font-semibold text-white">2. Self-Promoting Viral Engine</p>
+                            <p class="mt-1">Every submission is a creator trying to win, which means they're promoting to THEIR audience. Leaderboard creates ongoing competition between episodes. Platform-specific categories mean every social channel becomes a marketing arm.</p>
+                            <p class="mt-2 font-semibold text-white">3. International Clone-ability</p>
+                            <p class="mt-1">Different celebrity host per country (we sell format, not just show). AI slop is universal (bad AI hands look the same in Seoul and S&atilde;o Paulo). Local platforms, local celebrities, local advertisers&mdash;same format. Each territory = new revenue stream.</p>
+                            <p class="mt-2 font-semibold text-white">4. Multi-Platform Revenue Stacks</p>
+                            <p class="mt-1">Linear/Streaming: traditional ad revenue + licensing. Social: pre-roll ads on highlight clips, platform revenue shares. Micro-drama platforms: bite-sized "Best Of" compilations. Gaming: viewers vote in real-time via app (data goldmine for advertisers). Merchandise: "Slop of the Year" winner gets a merch line.</p>
+                        </div>
+                    </div>
+
+                    <div class="project-card rounded-3xl p-6">
+                        <div class="rounded-2xl overflow-hidden bg-[#111] mb-4" style="aspect-ratio:9/16;">
+                            <video class="w-full h-full object-contain" autoplay muted loop playsinline>
+                                <source src="assets/video/memes_loop.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mb-2"><span class="dev-badge">100% DEVELOPED</span><span class="dev-badge">$0 DEVELOPMENT COST</span></div>
+                        <h4 class="text-xl font-semibold font-display">MEMES</h4>
+                        <p class="mt-1 text-sm text-white/60 italic">Billions more views than the Super Bowl — acquired for free.</p>
+                        <p class="mt-2 text-sm text-white/70 leading-snug">Memes are billion-view brands nobody owns, the most recognizable characters on the internet — and now they have their own show.</p>
+                        <button class="expand-toggle" onclick="toggleExpand('exp-memes')"><span>Read more</span><i class="fa-solid fa-chevron-down"></i></button>
+                        <div id="exp-memes" class="expand-panel">
+                            <p>A vertical micro-comedy series starring the internet's most iconic, most unhinged meme characters — Fresa the Drama Queen, Noodles the OG, Pweese the Uninvited, Cliff Hanger the micro-drama leading man, Waifu the 2D Dream Girl, Fluensa the AI Influencer, Podcast Baby — all trapped in the ultimate attention economy: go viral or die, literally.</p>
+                            <p class="mt-2">Think Survivor meets Free Guy meets your uncle's unhinged WhatsApp group — where getting voted off means you literally stop existing. New trending memes drop in each episode as guest stars, with more visual recognition than the Kardashians. Built-in procedural drama, reality-show infighting, and cliffhangers every episode.</p>
+                        </div>
+                    </div>
+                    <div class="project-card rounded-3xl p-6">
+                        <div class="rounded-2xl overflow-hidden bg-[#111] mb-4" style="aspect-ratio:9/16; position:relative;">
+                            <video class="w-full h-full object-contain" autoplay muted loop playsinline>
+                                <source src="assets/video/ustory_loop.mp4" type="video/mp4">
+                            </video>
+                            <div class="px-3 py-1 rounded-full bg-px-teal text-white text-xs font-bold tracking-wide shrink-0" style="position:absolute; top:14px; left:14px; z-index:5; box-shadow:0 4px 18px rgba(0,0,0,0.4);">$BILLION-DOLLAR PLAY</div>
+                        </div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-sky-950 text-sky-400 tracking-wider">SELFIES BECOME STORIES</span>
+                        <h4 class="mt-3 text-xl font-semibold font-display">UStory</h4>
+                        <p class="mt-1 text-sm text-white/60 italic">Be the Star of Your Story.</p>
+                        <p class="mt-2 text-sm text-white/70 leading-snug">Turn your selfies into stories &mdash; personalized AI micro-stories starring YOU.</p>
+                        <button class="expand-toggle" onclick="toggleExpand('exp-ustory')"><span>Read more</span><i class="fa-solid fa-chevron-down"></i></button>
+                        <div id="exp-ustory" class="expand-panel">
+                            <p class="font-semibold text-white">Your phone already has:</p>
+                            <ul class="mt-1 space-y-1" style="list-style:disc; padding-left:1.1em;">
+                                <li>Hundreds of photos of you and the people you love</li>
+                                <li>Facial recognition that knows who&rsquo;s who</li>
+                                <li>AI that organizes your images by emotions, moments, places, and faces</li>
+                                <li>The screen you are already watching</li>
+                            </ul>
+                            <p class="mt-3">UStory is the world&rsquo;s first personalized micro-drama story engine &mdash; powered by AI &mdash; that makes YOU the star of your story.</p>
+                            <p class="mt-2">Choose your story. Click your selfie. Watch yourself come alive on screen&mdash;in a love story, adventure, action &mdash; in a story made for YOU starring YOU.</p>
+                            <p class="mt-3 font-semibold text-white">WHY YOU CAN&rsquo;T STOP WATCHING &amp; SHARING</p>
+                            <p class="mt-1">When YOU are the star on screen, something primal happens. You don&rsquo;t just watch it &mdash; you feel it. Seeing yourself as the romantic lead &mdash; goosebumps. Watching yourself or your kids in a time-travel adventure &mdash; heart-racing. Being the action hero &mdash; instant adrenaline and a guaranteed share.</p>
+                            <p class="mt-2">The product IS the marketing. Every share is a trailer. Every trailer is personalized content and a personal invitation to see more. Every invitation touches someone new who can&rsquo;t wait to see themselves as the star of their own stories.</p>
+                        </div>
+                    </div>
+                    <div class="project-card rounded-3xl p-6">
+                        <div class="rounded-2xl overflow-hidden bg-[#111] mb-4" style="aspect-ratio:9/16;">
+                            <video class="w-full h-full object-contain" autoplay muted loop playsinline>
+                                <source src="assets/video/enchanted_bookshop_loop.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mb-2"><span class="dev-badge">100% DEVELOPED</span><span class="dev-badge">$0 DEVELOPMENT COST</span></div>
+                        <h4 class="text-xl font-semibold font-display">Enchanted Bookshop</h4>
+                        <p class="mt-1 text-sm text-white/60 italic">Where the stories you love come alive — and won't let you go.</p>
+                        <p class="mt-2 text-sm text-white/70 leading-snug">A girl inherits a bookshop where any book she opens pulls her inside as the hero.</p>
+                        <button class="expand-toggle" onclick="toggleExpand('exp-bookshop')"><span>Read more</span><i class="fa-solid fa-chevron-down"></i></button>
+                        <div id="exp-bookshop" class="expand-panel">
+                            <p>When 12-year-old Maya inherits her late mother's bookshop, she discovers a secret room where any book she opens comes to life — pulling her into the story as the hero. Robin Hood, Dracula, Frankenstein, Peter Pan, Alice in Wonderland — 60–90 second episodes, one story, one cliffhanger each time.</p>
+                            <p class="mt-2">Drawn entirely from public-domain literature: infinite scalable episodes, zero licensing cost, and an AI-swappable lead character for any market, language, or culture.</p>
+                        </div>
+                    </div>
+                    <div class="project-card rounded-3xl p-6">
+                        <div class="rounded-2xl overflow-hidden bg-[#111] mb-4" style="aspect-ratio:9/16;">
+                            <video class="w-full h-full object-contain" autoplay muted loop playsinline>
+                                <source src="assets/video/horror_show_loop.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-red-950 text-red-400 tracking-wider">VERTICAL MICRO-HORROR</span>
+                        <h4 class="mt-3 text-xl font-semibold font-display">HORROR SHOW!</h4>
+                        <p class="mt-1 text-sm text-white/60 italic">Horror is taking over. This is how you ride it.</p>
+                        <p class="mt-2 text-sm text-white/70 leading-snug">The most iconic nightmares in horror are back — trapped in a cursed neon city, forced to solve supernatural crimes before the next victim is one of them.</p>
+                        <button class="expand-toggle" onclick="toggleExpand('exp-horror')"><span>Read more</span><i class="fa-solid fa-chevron-down"></i></button>
+                        <div id="exp-horror" class="expand-panel">
+                            <p>Scooby-Doo for adults, The Monster Squad with teeth, Tales from the Crypt for the phone era — 1980s horror mythology remixed into vertical micro-horror episodes engineered to end every 60–90 seconds on a kill, reveal, betrayal, or cliffhanger.</p>
+                            <p class="mt-2">Horror delivers high audience intensity at controlled cost; vertical microdrama delivers habit, completion, and binge behavior. This puts both proven forces into one AI-native franchise.</p>
+                        </div>
+                    </div>
+
+                    <div class="project-card rounded-3xl p-6">
+                        <div class="rounded-2xl overflow-hidden bg-[#111] mb-4" style="aspect-ratio:9/16;">
+                            <video class="w-full h-full object-contain" autoplay muted loop playsinline>
+                                <source src="assets/video/rodeo_loop.mp4" type="video/mp4"></video>
+                            </div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-orange-950 text-orange-400 tracking-wider">ANIMATED FEATURE</span>
+                        <h4 class="mt-3 text-xl font-semibold font-display">RODEO</h4>
+                        <p class="mt-2 text-sm text-white/70 leading-snug">An American Mulan on the farm — community-made by <span class="higgs-green font-semibold">Cartoon Hero</span> — the biggest AI animation community on X.</p>
+                        <button class="expand-toggle" onclick="toggleExpand('exp-rodeo')"><span>Read more</span><i class="fa-solid fa-chevron-down"></i></button>
+                        <div id="exp-rodeo" class="expand-panel">
+                            <p>A teenage girl cross-dresses as a cowboy to infiltrate a $1M bull-riding championship and save her family's rodeo. Country soundtrack, Vegas showdown, Austin Film Festival semi-finalist — and a built-in community production pipeline via the Cartoon Hero network.</p>
+                        </div>
+                    </div>
+                    <div class="border border-dashed border-white/15 rounded-2xl p-6 text-center flex flex-col items-center justify-center gap-2 min-h-[160px] md:col-span-2 lg:col-span-3"><i class="fa-solid fa-plus text-white/30 text-sm"></i><span class="text-white/30 text-xs">More shows coming — wide-poster slot ready</span></div>
+                    <div class="border border-dashed border-white/15 rounded-2xl p-6 text-center flex flex-col items-center justify-center gap-2 min-h-[160px] md:col-span-2 lg:col-span-3"><i class="fa-solid fa-plus text-white/30 text-sm"></i><span class="text-white/30 text-xs">More shows coming — wide-poster slot ready</span></div>
+
+                </div>
+            </div>
+        </div>
+
+    <!-- ================= RE-MIX ANY SHOW ================= -->
+    <div class="max-w-6xl mx-auto px-8 pt-2 pb-2">
+        <div class="revive-band rounded-[32px] p-6 md:p-10">
+
+            <h2 class="text-4xl md:text-5xl font-bold tracking-tight font-display leading-[1.03]"><span class="higgs-green">RE-MIX</span> any show — any IP — with AI</h2>
+
+            <div class="mt-8 grid md:grid-cols-3 gap-5" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.25rem;">
+                <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-3">
+                    <img src="assets/images/remix_pam_peewee.jpg" alt="Pam + Pee-wee in Space remix concept" class="rounded-xl w-full">
+                </div>
+                <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-3">
+                    <img src="assets/images/remix_walker_cliff.jpg" alt="Walker + Cliff remix concept" class="rounded-xl w-full">
+                </div>
+                <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-3">
+                    <img src="assets/images/remix_dr_t_nurse_daisy.jpg" alt="Dr. T + Nurse Daisy remix concept" class="rounded-xl w-full">
+                </div>
+            </div>
+
+            <p class="mt-8 text-xl md:text-2xl text-white/90 font-display leading-snug">Anything is possible now with AI <span style="color:#3ec0bb" class="font-bold">+</span> imagination. We are <span class="font-bold">FIRST</span> <span style="color:#3ec0bb" class="font-bold">+</span> we can <span class="font-bold">OWN</span> this <span class="higgs-green font-bold">Billion-Dollar IP-RE-MIX market</span>.</p>
+
+        </div>
+    </div>
+
+    <!-- ================= REVIVE + RE-MIX ANY STAR ================= -->
+    <div class="max-w-6xl mx-auto px-8 pt-2 pb-2">
+        <div class="stars-band rounded-[32px] p-6 md:p-10">
+
+            <h2 class="text-4xl md:text-5xl font-bold tracking-tight font-display leading-[1.03]">Revive <span class="higgs-green">+</span> Re-Mix <span class="higgs-green">ANY STAR</span> — with AI</h2>
+            <p class="mt-3 text-white/70 text-[15px] max-w-2xl leading-relaxed">STARS who were HOUSEHOLD NAMES <span style="color:#3ec0bb" class="font-bold">+</span> FACES — still active on social media, with billion$ worth of recognition.</p>
+            <p class="mt-2 higgs-green text-lg font-display font-bold">WE BRING THEM BACK — IN THEIR PRIME — with AI</p>
+
+            <!-- SHOW #1: Team 80's -->
+            <div class="mt-8 bg-white/[0.03] border border-white/10 rounded-2xl p-6 md:p-8">
+                <div class="text-xs font-semibold tracking-wider text-white/40 mb-3">SHOW #1: TEAM 80's</div>
+                <div class="rounded-2xl overflow-hidden bg-[#111]" style="aspect-ratio:16/9;">
+                    <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+                        <source src="assets/video/team80s_loop.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <p class="mt-4 text-lg text-white/90 italic font-display leading-snug">The most iconic 80's STARS, in their PRIME, team up to solve mysteries and find love.</p>
+                <p class="mt-3 text-[15px] text-white/75 leading-relaxed">BUSINESS MODEL: in 1994, a zero-value IP cartoon superhero from the 60's (Space Ghost) was resurrected and turned into a talk show for $35,000 per episode. It ran for 10 years, generated billions of dollars, and built the multi-billion content empire ADULT SWIM. Now, with AI, we can revive any IP — and any star from the past — and make them come alive in unique, fun, viral, shareable content.</p>
+                <img src="assets/images/space_ghost_adult_swim.jpg" alt="Space Ghost / Adult Swim" class="rounded-xl mr-4 mb-2" style="width:180px; float:left;">
+                <p class="mt-3 text-[15px] text-white/75 leading-relaxed">Reimagined 80's icons unite to solve crimes and navigate romance. Each episode brings a fresh mystery alongside simmering romantic tension between iconic archetypes the audience already loves. The soundtrack alone is a licensing goldmine.</p>
+
+                <div class="mt-6 grid md:grid-cols-2 gap-4">
+                    <div class="bg-[#050505] border border-white/10 rounded-2xl p-5">
+                        <div class="text-xs font-semibold tracking-wider higgs-green mb-2">SPINOFF/CROSSOVER/BATTLE-CLASH #1</div>
+                        <div class="font-display font-semibold text-white mb-2">Team 80's — Hair Rockers</div>
+                        <p class="text-[13.5px] text-white/70 leading-relaxed">Glam "Hair Bands" from the 80's like Poison, Mötley Crüe, Lita Ford, Cinderella, Faster Pussycat and others.</p>
+                    </div>
+                    <div class="bg-[#050505] border border-white/10 rounded-2xl p-5">
+                        <div class="text-xs font-semibold tracking-wider higgs-green mb-2">SPINOFF/CROSSOVER/BATTLE-CLASH #2</div>
+                        <div class="font-display font-semibold text-white mb-2">Team 80's — The Normies</div>
+                        <p class="text-[13.5px] text-white/70 leading-relaxed">Huey Lewis, Kylie Minogue, Phil Collins, Paula Abdul, Richard Marx, Bryan Adams.</p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- ================= POLITICAL (confidential) ================= -->
+    <div class="max-w-6xl mx-auto px-8 pt-2 pb-2">
+        <div class="political-band rounded-[32px] p-8 md:p-12">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-semibold px-3 py-1 rounded-full confidential-glow">CONFIDENTIAL — RESERVED FOR A LIVE CONVERSATION</span>
+                    <h3 class="mt-4 text-2xl md:text-3xl font-semibold font-display tracking-tight">Political &amp; Public Affairs</h3>
+                    <p class="mt-3 text-[15px] text-white/70 max-w-xl leading-relaxed"><span class="px-teal font-bold">$10.8B</span> will be spent on political advertising in America this year for the midterms alone. Over 25+ years and 300+ campaigns worldwide — including the last four U.S. presidential cycles — <span class="higgs-green font-bold">I built something like this, in the political communications space, now valued at $42B</span>. There's a version of that with AI video. Details on this one are for a live conversation, not a written deck.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WHY PIXIE LABS -->
+    <!-- NEXT STEPS -->
+    <div id="next" class="max-w-3xl mx-auto px-8 py-16 text-center">
+        <div class="flex justify-center mb-8">
+            <img src="assets/images/pixielabs_yt_logo.png" alt="Pixie Labs" style="height:120px; width:auto;">
+        </div>
+        <div class="text-xs font-semibold tracking-[2.5px] text-[#6366f1] mb-3">NEXT STEPS — EXACTLY AS DISCUSSED</div>
+        <h2 class="text-5xl font-bold tracking-[-1.5px] font-display">Ready when you are.</h2>
+        <div class="mt-9">
+            <a href="mailto:akiva@agncgroup.com" class="inline-flex items-center px-8 py-[17px] rounded-2xl bg-white text-[#050505] font-semibold text-base hover:bg-zinc-100 transition-all">CONTACT</a>
+        </div>
+        <div class="mt-4 text-xs text-white/50">Happy to schedule the follow-up call to discuss specific projects.</div>
+        <div class="mt-14 text-[10px] text-white/40 tracking-widest">AKIVA PRELL • AGNC GROUP • ISRAEL / USA<br>Enterprise Partnership &amp; Joint Case Study — July 2026</div>
+    </div>
+
+    <script>
+        function init() {
+            const nav = document.getElementById('mainnav');
+            const toggle = () => nav.classList.toggle('nav-scrolled', window.scrollY > 30);
+            window.addEventListener('scroll', toggle);
+            toggle();
+        }
+        window.onload = init;
+
+        // Belt-and-suspenders infinite loop for the hero video, in addition
+        // to the native loop attribute, in case a browser ever drops it.
+        (function () {
+            const hero = document.getElementById('heroVideo');
+            if (hero) {
+                hero.addEventListener('ended', function () {
+                    hero.currentTime = 0;
+                    hero.play();
+                });
+            }
+        })();
+
+        // Reusable: swap a poster image (with a play button) for an inline,
+        // playing video in the exact same spot — used for section headers
+        // like the SINGh trailer. No redirect off-site.
+        function playInlineVideo(containerId) {
+            const el = document.getElementById(containerId);
+            const poster = el.querySelector('.inline-video-poster');
+            const frame = el.querySelector('.media-16x9:not(.inline-video-poster)');
+            const video = frame.querySelector('video');
+            if (poster) poster.style.display = 'none';
+            frame.style.display = 'block';
+            video.muted = false;
+            video.play();
+        }
+
+        // Swap in a different video source in the same inline-video slot
+        // (used by "The New Norm" to offer a second episode from one card).
+        function playAltVideo(containerId, src) {
+            const el = document.getElementById(containerId);
+            const source = el.querySelector('video source');
+            const video = el.querySelector('video');
+            source.setAttribute('src', src);
+            video.load();
+            playInlineVideo(containerId);
+        }
+
+        // Expand/collapse "Read more" panels on the Ready-to-Render Slate cards
+        function toggleExpand(panelId) {
+            const panel = document.getElementById(panelId);
+            const btn = panel.previousElementSibling;
+            const isOpen = panel.classList.toggle('open');
+            if (btn) {
+                btn.classList.toggle('open', isOpen);
+                const label = btn.querySelector('span');
+                if (label) label.textContent = isOpen ? 'Show less' : 'Read more';
+            }
+        }
+    </script>
+</body>
+</html>
